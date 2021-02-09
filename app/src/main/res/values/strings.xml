@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">Notifly</string>
+    <string name="user_name">User name</string>
+    <string name="email">Email</string>
+    <string name="email_address">Email address</string>
+    <string name="phone">Phone</string>
+    <string name="_880">+880</string>
+    <string name="password">Password</string>
+    <string name="sign_up">Sign up</string>
+    <string name="already_have_account">Already Have Account?</string>
+    <string name="sign_in">Sign in</string>
+    <string name="nav_open">Open Navigation</string>
+    <string name="nav_close">Close Navigation</string>
+    <string name="enter_email_address">Enter email Address</string>
+    <string name="enter_password">Enter password</string>
+    <string name="log_in">Log in</string>
+    <string name="create_new_account">Create New Account</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="post">Post</string>
+    <string name="title_error">Title doesn\'t exist</string>
+    <string name="desc_error">Description doesn\'t exist</string>
+
+    <string-array name="groupSecure">
+        <item>Private</item>
+        <item>Public</item>
+    </string-array>
+
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <!--
+        This is the name that users will see when interacting with this channel.
+        It should describe the category of notifications that will be sent through this channel
+     -->
+    <!-- [START fcm_default_icon_string] -->
+    <string name="default_notification_channel_name" translatable="true">Weather</string>
+
+    <string name="msg_token_fmt" translatable="false">FCM registration Token: %s</string>
+
+</resources>

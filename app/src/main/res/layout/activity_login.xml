@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#222121"
+    tools:context=".SignInActivity">
+
+    <EditText
+        android:id="@+id/emailEditTextId"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="329dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/textfield_style"
+        android:ems="10"
+        android:fontFamily="serif"
+        android:hint="@string/enter_email_address"
+        android:inputType="textEmailAddress"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:textColor="@color/light_blue"
+        android:textColorHint="@color/light_gray"
+        />
+
+    <EditText
+        android:id="@+id/passEditTextId"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/emailEditTextId"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/textfield_style"
+        android:ems="10"
+        android:fontFamily="serif"
+        android:hint="@string/enter_password"
+        android:inputType="textPassword"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:textColor="@color/light_blue"
+        android:textColorHint="@color/light_gray" />
+
+    <Button
+        android:id="@+id/signInButtonId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/passEditTextId"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="50dp"
+        android:background="@drawable/button_style"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="@string/sign_in"
+        android:textAllCaps="false"
+        android:textColor="@color/light_green"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/signUpTextId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/signInButtonId"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="142dp"
+        android:layout_marginTop="154dp"
+        android:layout_marginEnd="141dp"
+        android:text="@string/create_new_account"
+        android:textColor="@color/light_blue" />
+
+
+</RelativeLayout>

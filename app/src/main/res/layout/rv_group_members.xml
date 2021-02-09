@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="5dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="5dp"
+        >
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:id="@+id/tv_userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Forhad Kashem"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textSize="14sp"
+            android:textStyle="normal" />
+
+
+        <TextView
+            android:id="@+id/tvBtnRemoveMembers"
+            android:layout_width="90dp"
+            android:layout_height="25dp"
+            android:padding="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/remove_textfield"
+            android:drawableStart="@drawable/ic_remove"
+            android:text="Remove"
+            android:textSize="12sp"
+            android:textAlignment="center"
+            android:gravity="center_vertical"
+            tools:ignore="RtlCompat" />
+        <TextView
+            android:id="@+id/tvBtnRemoveMembersSuccess"
+            android:layout_width="90dp"
+            android:layout_height="25dp"
+            android:padding="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawableStart="@drawable/ic_remove_member_success"
+            android:text="Removed"
+            android:textSize="12sp"
+            android:textAlignment="center"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            tools:ignore="RtlCompat" />
+
+
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

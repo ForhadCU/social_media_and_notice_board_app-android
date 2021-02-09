@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateGroupActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:id="@+id/toolbarId"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorPrimary"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv1"
+        android:text="Group name"
+        android:layout_below="@+id/toolbarId"
+        android:layout_marginTop="10dp"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_marginLeft="5dp"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edtTxt_groupName"
+        android:layout_below="@id/tv1"
+        android:background="@drawable/input_outline2"
+        android:hint="Enter group name"
+        android:padding="5dp"
+        android:maxLines="1"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="10dp"
+        android:textSize="15sp"
+
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv2"
+        android:text="Group ID"
+        android:layout_below="@+id/edtTxt_groupName"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="5dp"
+
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edtTxt_groupID"
+        android:layout_below="@id/tv2"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/input_outline2"
+        android:hint="Enter group ID"
+        android:padding="5dp"
+        android:maxLines="1"
+        android:textSize="15sp"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv3"
+        android:text="Description"
+        android:layout_below="@+id/edtTxt_groupID"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/edtTxt_groupDesc"
+        android:layout_below="@id/tv3"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/input_outline2"
+        android:hint="Enter Description here..."
+        android:padding="5dp"
+        android:maxLines="5"
+        android:textSize="15sp"
+
+        />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_groupSec"
+        android:layout_below="@id/edtTxt_groupDesc"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_createGroup"
+        android:layout_below="@+id/spinner_groupSec"
+        android:layout_margin="70dp"
+        android:text="Create / Save"
+        android:textAllCaps="false"
+        android:backgroundTint="#4CAF50"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        />
+
+
+</RelativeLayout>
