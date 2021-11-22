@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,6 +63,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         toolbar = findViewById(R.id.toolbarId);
         setSupportActionBar(toolbar);
         this.setTitle("Dashboard");
+        if (Build.VERSION.SDK_INT >= 21)
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
 
         drawerLayout = findViewById(R.id.drawerLayoutId);
         navigationView = findViewById(R.id.navViewId);
@@ -162,12 +165,12 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
     }
 
-    //First of all, check user signed in or not
+/*    //First of all, check user signed in or not
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthstatelistener);
-    }
+    }*/
 
     private void mShowAllPosts() {
         uId = mAuth.getCurrentUser().getUid();
@@ -224,5 +227,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
     private void signOutMethod() {
         mAuth.signOut();
+        startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+        finish();
     }
 }

@@ -1,40 +1,36 @@
 package com.example.myproject;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myproject.builderDesignPattern.RegisterClientActivity;
 import com.example.myproject.interfaces.InputValidationInterface;
 import com.example.myproject.interfaces.UserCheckingInterface;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener, InputValidationInterface, UserCheckingInterface {
     private TextView signUpTextView;
     private Button signInButton;
-    private EditText emailEditText, passEditText;
-    private FirebaseAuth mAuth;
+    private TextInputEditText emailEditText, passEditText;
     private DatabaseReference mDatabaseRef;
     private String uID = null;
 
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,18 +38,29 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_login);
         //hide title
 //        getSupportActionBar().hide();
-        mAuth = FirebaseAuth.getInstance();
-//        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("USERS");
-//         uID = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
 
+        mBind();
+        mInit();
+        mCheckCurrentUser();
+        mSetOnClick();
+    }
+
+    private void mSetOnClick() {
+        signUpTextView.setOnClickListener(this);
+        signInButton.setOnClickListener(this);
+    }
+
+    private void mBind() {
         signUpTextView = findViewById(R.id.signUpTextId);
         signInButton = findViewById(R.id.signInButtonId);
         emailEditText = findViewById(R.id.emailEditTextId);
         passEditText = findViewById(R.id.passEditTextId);
+    }
 
-        signUpTextView.setOnClickListener(this);
-        signInButton.setOnClickListener(this);
+    private void mInit() {
+        mAuth = FirebaseAuth.getInstance();
+
     }
 
     @Override
@@ -123,8 +130,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void mCheckCurrentUser() {
-        final String user_id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
+        if (mAuth.getCurrentUser() != null)
+        {
+            startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+            finish();
+        }
 
 
         //Uid read from real time database

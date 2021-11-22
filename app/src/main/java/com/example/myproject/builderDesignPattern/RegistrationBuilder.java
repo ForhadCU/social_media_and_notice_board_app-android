@@ -5,7 +5,21 @@ public class RegistrationBuilder {
     private String password;
     private String email;
     private String phone;
+    private RegistrationBuilder registrationBuilder;
 
+
+/*    public RegistrationBuilder getRegistrationBuilder()
+    {
+        if (registrationBuilder == null)
+        {
+            registrationBuilder = new RegistrationBuilder();
+        }
+        return registrationBuilder;
+
+    }*/
+
+    public RegistrationBuilder() {
+    }
 
     public RegistrationBuilder(String password, String email) {
         this.password = password;

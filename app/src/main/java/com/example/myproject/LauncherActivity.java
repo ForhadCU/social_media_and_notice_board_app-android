@@ -62,7 +62,7 @@ public class LauncherActivity extends AppCompatActivity {
 
     }
     public void intentMethod(){
-        Intent intent = new Intent(LauncherActivity.this, DashboardActivity.class);
+        Intent intent = new Intent(LauncherActivity.this, SignInActivity.class);
         startActivity(intent);
         finish();
     }

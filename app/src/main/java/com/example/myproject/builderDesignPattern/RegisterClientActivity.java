@@ -3,6 +3,7 @@ package com.example.myproject.builderDesignPattern;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.example.myproject.DashboardActivity;
 import com.example.myproject.R;
@@ -25,13 +27,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -59,6 +58,12 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
         //add back up button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        //change status bar color
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        }
+
 
         usernameEditText = findViewById(R.id.usernameEditTextId);
         emailEditText = findViewById(R.id.emailEditTextId);
@@ -95,7 +100,9 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
                 String phoneNum = phoneEditText.getText().toString().trim();
                 String password = passEditText.getText().toString().trim();
 
-                Registration registration = new RegistrationBuilder(password, email).setUsername(username).setPhone(phoneNum).Build();
+                Registration registration = new RegistrationBuilder(password, email)
+                        .setUsername(username)
+                        .setPhone(phoneNum).Build();
                 if (registration.inputValidation()) {
                     signUpMethod(username, email, phoneNum, password);
                 }
