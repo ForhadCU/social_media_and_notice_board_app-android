@@ -7,9 +7,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/notifly_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/notifly_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
@@ -25,19 +25,19 @@
             android:resource="@color/colorAccent" />
 
 
-        <activity android:name=".EditGroupActivity" />
-        <activity android:name=".AddMembersActivity" />
-        <activity android:name=".MembersActivity" />
-        <activity android:name=".NoticesActivity" />
-        <activity android:name=".strategyDesignPattern.GroupActivity" />
-        <activity android:name=".PostActivity" />
-        <activity android:name=".ManageGroupActivity" />
-        <activity android:name=".NotificationTestingActivity" />
-        <activity android:name=".CreateGroupActivity" />
-        <activity android:name=".builderDesignPattern.RegisterClientActivity" />
-        <activity android:name=".DashboardActivity" />
-        <activity android:name=".SignInActivity" />
-        <activity android:name=".LauncherActivity">
+        <activity android:name=".presentationLayer.EditGroupActivity" />
+        <activity android:name=".presentationLayer.AddMembersActivity" />
+        <activity android:name=".presentationLayer.MembersActivity" />
+        <activity android:name=".presentationLayer.NoticesActivity" />
+        <activity android:name=".applicationLayer.strategyDesignPattern.GroupActivity" />
+        <activity android:name=".presentationLayer.PostActivity" />
+        <activity android:name=".presentationLayer.ManageGroupActivity" />
+        <activity android:name=".presentationLayer.NotificationTestingActivity" />
+        <activity android:name=".presentationLayer.CreateGroupActivity" />
+        <activity android:name=".presentationLayer.RegisterClientActivity" />
+        <activity android:name=".presentationLayer.DashboardActivity" />
+        <activity android:name=".presentationLayer.LoginActivity" />
+        <activity android:name=".presentationLayer.LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,7 +46,7 @@
         </activity>
 
         <service
-            android:name=".MyFirebaseMessagingService"
+            android:name=".presentationLayer.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
