@@ -7,16 +7,16 @@ public class Data_Handler implements Serializable {
     private String postTitle;
     private String desc;
     private String imageUri;
-    private String gId;
+    private String gDocId;
     private String gName;
 
     public Data_Handler() {
 
     }
 
-    public Data_Handler(String currentUid, String gId, String gName, String postTitle, String desc, String imageUri) {
+    public Data_Handler(String currentUid, String gDocId, String gName, String postTitle, String desc, String imageUri) {
         this.currentUid = currentUid;
-        this.gId = gId;
+        this.gDocId = gDocId;
         this.postTitle = postTitle;
         this.desc = desc;
         this.imageUri = imageUri;
@@ -55,12 +55,12 @@ public class Data_Handler implements Serializable {
         this.imageUri = imageUri;
     }
 
-    public String getgId() {
-        return gId;
+    public String getgDocId() {
+        return gDocId;
     }
 
-    public void setgId(String gId) {
-        this.gId = gId;
+    public void setgDocId(String gDocId) {
+        this.gDocId = gDocId;
     }
 
     public String getgName() {

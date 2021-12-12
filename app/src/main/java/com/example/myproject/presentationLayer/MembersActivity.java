@@ -2,6 +2,7 @@ package com.example.myproject.presentationLayer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,17 +14,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myproject.R;
 import com.example.myproject.applicationLayer.adapters.AdapterGroupMembers;
 import com.example.myproject.applicationLayer.interfaces.ICallbackRemoveMember;
+import com.example.myproject.databaseLayer.models.Constants;
 import com.example.myproject.databaseLayer.models.GroupMember;
+import com.example.myproject.databaseLayer.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MembersActivity extends AppCompatActivity implements ICallbackRemoveMember {
     private Toolbar toolbar;
@@ -34,8 +40,10 @@ public class MembersActivity extends AppCompatActivity implements ICallbackRemov
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private CollectionReference collectionReferenceGroupMembers = firebaseFirestore.collection("GROUP_MEMBERS");
+    private CollectionReference collRefGroup = firebaseFirestore.collection(Constants.coll_groups);
+    private CollectionReference collRefUsers = firebaseFirestore.collection(Constants.coll_users);
 
-    private String currentGId;
+    private String gDocId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +67,7 @@ public class MembersActivity extends AppCompatActivity implements ICallbackRemov
 
     private void intentHandler() {
         Intent getData = getIntent();
-        currentGId = getData.getStringExtra("gId");
+        gDocId = getData.getStringExtra("gDocId");
     }
 
     @Override
@@ -87,12 +95,46 @@ public class MembersActivity extends AppCompatActivity implements ICallbackRemov
         });
 */
 
+        collRefGroup.document(gDocId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful())
+                {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    ArrayList<String> gMemberList = new ArrayList<>();
+                     gMemberList = (ArrayList<String>) Objects.requireNonNull(documentSnapshot).get("gMembers");
+                     for (String s : gMemberList)
+                     {
+                         collRefUsers.document(s).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                             @Override
+                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                 if (task.isSuccessful())
+                                 {
+                                     GroupMember groupMember = Objects.requireNonNull(task.getResult()).toObject(GroupMember.class);
+                                     groupMemberArrayList.add(groupMember);
+                                     adapterGroupMembers.notifyDataSetChanged();
+                                 }
+                             }
+                         });
+                     }
+
+                    Log.d("CRUD", "onComplete: gMemberList size: "+gMemberList.size());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("CRUD", "onFailure: failed to read group");
+            }
+        });
+
+/*
         collectionReferenceGroupMembers.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot documentSnapshot : task.getResult()) {
-                        if (documentSnapshot.get("gId").toString().equals(currentGId)) {
+                        if (documentSnapshot.get("gId").toString().equals(gDocId)) {
                             GroupMember groupMember = documentSnapshot.toObject(GroupMember.class);
                             groupMemberArrayList.add(groupMember);
                             adapterGroupMembers.notifyDataSetChanged();
@@ -102,6 +144,7 @@ public class MembersActivity extends AppCompatActivity implements ICallbackRemov
                 }
             }
         });
+*/
     }
 
     private void mClear() {
@@ -115,7 +158,9 @@ public class MembersActivity extends AppCompatActivity implements ICallbackRemov
     @Override
     public void removeMember(final String uId, final String gId) {
 
-        collectionReferenceGroupMembers.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        collRefGroup.document(gDocId).update(Constants.gMembers, FieldValue.arrayRemove(uId));
+
+    /*addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -131,6 +176,6 @@ public class MembersActivity extends AppCompatActivity implements ICallbackRemov
                     }
                 }
             }
-        });
+        });*/
     }
 }

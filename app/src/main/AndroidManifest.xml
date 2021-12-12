@@ -26,11 +26,11 @@
 
 
         <activity android:name=".presentationLayer.EditGroupActivity" />
-        <activity android:name=".presentationLayer.AddMembersActivity" />
+        <activity android:name=".presentationLayer.AllUsersActivity" />
         <activity android:name=".presentationLayer.MembersActivity" />
         <activity android:name=".presentationLayer.NoticesActivity" />
-        <activity android:name=".applicationLayer.strategyDesignPattern.GroupActivity" />
-        <activity android:name=".presentationLayer.PostActivity" />
+        <activity android:name=".presentationLayer.GroupActivity" />
+        <activity android:name=".presentationLayer.CreateNoticeActivity" />
         <activity android:name=".presentationLayer.ManageGroupActivity" />
         <activity android:name=".presentationLayer.NotificationTestingActivity" />
         <activity android:name=".presentationLayer.CreateGroupActivity" />

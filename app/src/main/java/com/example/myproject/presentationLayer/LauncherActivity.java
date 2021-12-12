@@ -11,11 +11,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.myproject.R;
+import com.google.firebase.auth.FirebaseAuth;
 
-public class LauncherActivity extends AppCompatActivity {
+public class LauncherActivity extends AppCompatActivity  {
     private TextView appName, loadingText;
     private ProgressBar progressBar;
     int progress;
+
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,19 +47,27 @@ public class LauncherActivity extends AppCompatActivity {
             @Override
             public void run() {
                 threadMethod();
-                intentMethod();
+//                mCheckCurrentUser();
+                if (mAuth.getCurrentUser() != null && mAuth.getCurrentUser().isEmailVerified()) {
+                    startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                    finish();
+                } else {
+                    intentMethod();
+                }
             }
         });
         thread.start();
 
     }
     public void threadMethod(){
-        for (progress = 1; progress<100; progress+=1)
+        for (progress = 1; progress<80; progress+=1)
         {
 
             try {
-                Thread.sleep(50);
+                Thread.sleep(45);
                 progressBar.setProgress(progress);
+
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -67,5 +78,14 @@ public class LauncherActivity extends AppCompatActivity {
         Intent intent = new Intent(LauncherActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+
+     void mCheckCurrentUser() {
+        if (mAuth.getCurrentUser() != null && mAuth.getCurrentUser().isEmailVerified()) {
+            startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+            finish();
+        } else {
+            intentMethod();
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.example.myproject.presentationLayer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,20 +18,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.myproject.R;
-import com.example.myproject.databaseLayer.database.LocalDataHandler;
 import com.example.myproject.applicationLayer.facadeDesignPattern.CommandType;
 import com.example.myproject.applicationLayer.facadeDesignPattern.GroupMaintainer;
+import com.example.myproject.applicationLayer.services.CRUD_firebase;
+import com.example.myproject.databaseLayer.database.LocalDataHandler;
+import com.example.myproject.databaseLayer.models.Constants;
 import com.example.myproject.databaseLayer.models.Groups;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class CreateGroupActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     private Toolbar toolbar;
@@ -44,41 +52,57 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
     private String groupId, groupName, groupDesc;
     private ArrayList<String> ingredientsList = new ArrayList<>();
     private ArrayList<Groups> groupsArrayList;
-
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    private CollectionReference myGroupsRef = firebaseFirestore.collection("MY_GROUPS");
+    private CollectionReference myGroupsRef = firebaseFirestore.collection(Constants.coll_groups);
+    private CollectionReference collRefUsers = firebaseFirestore.collection(Constants.coll_users);
+    private String gDocId;
+    private String adminUid;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
+        this.setTitle("Create Group");
 
-        toolbar = findViewById(R.id.toolbarId);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mSetToolbar();
         testLd = new LocalDataHandler(this);
+        mBind();
+        mInit();
+        spinnerHandler();
+        mSetOnclick();
+    }
 
+    private void mInit() {
+        adminUid = mAuth.getCurrentUser().getUid();
+    }
 
+    private void mSetOnclick() {
+        buttonCreateGroup.setOnClickListener(this);
+        spinnerGroupSec.setOnItemSelectedListener(this);
+    }
+
+    private void mBind() {
         editTextGroupName = findViewById(R.id.edtTxt_groupName);
         editTextGroupID = findViewById(R.id.edtTxt_groupID);
         editTextGroupDesc = findViewById(R.id.edtTxt_groupDesc);
         buttonCreateGroup = findViewById(R.id.btn_createGroup);
         spinnerGroupSec = findViewById(R.id.spinner_groupSec);
+    }
 
-
-        spinnerHandler();
-
-        buttonCreateGroup.setOnClickListener(this);
-        spinnerGroupSec.setOnItemSelectedListener(this);
-
-
+    private void mSetToolbar() {
+        toolbar = findViewById(R.id.toolbarId);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     private void spinnerHandler() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.groupSecure, android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.groupSecure,
+                android.R.layout.simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerGroupSec.setAdapter(adapter);
     }
@@ -98,11 +122,10 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
                 groupId = editTextGroupID.getText().toString();
                 groupName = editTextGroupName.getText().toString();
                 groupDesc = editTextGroupDesc.getText().toString();
-                check();
                 if (!TextUtils.isEmpty(groupId) && !TextUtils.isEmpty(groupName) && !TextUtils.isEmpty(groupDesc)) {
 
 //                    long insertID = localDataHandler.mAddGroupDetails(groupId, groupName , groupDesc);
-                    mAddGroupDetailsOnline(groupId, groupName, groupDesc, mAuth.getCurrentUser().getUid());
+                    mAddGroupDetailsOnline(groupId, groupName, groupDesc);
 
                     if (groupSec.equals("private")) {
                         String confirmation = GroupMaintainer.groupCreatedConfirmation(CommandType.PRIVATE);
@@ -129,6 +152,7 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
                 } else {
                     Toast.makeText(this, "Empty field", Toast.LENGTH_SHORT).show();
                 }
+                check();
 
 
         }
@@ -171,16 +195,25 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
         return groupsArrayList;
     }
 
-    public void mAddGroupDetailsOnline(String groupID, String groupName, String groupDesc, String uId) {
+    public void mAddGroupDetailsOnline(String groupID, String groupName, String groupDesc) {
+        ArrayList<String> gMembers = new ArrayList<>();
+        ArrayList<String> gNotices = new ArrayList<>();
+
+
         Map<String, Object> groupMap = new HashMap<>();
         groupMap.put("gId", groupID);
         groupMap.put("gName", groupName);
         groupMap.put("gDesc", groupDesc);
-        groupMap.put("uId", uId);
+        groupMap.put("adminUid", adminUid);
+        groupMap.put("gMembers", gMembers);
+        groupMap.put("gNotices", gNotices);
 
         myGroupsRef.add(groupMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
-            public void onSuccess(DocumentReference documentReference) {
+            public void onSuccess(final DocumentReference documentReference) {
+                //save gDocId into this admin's User-data.
+//                gDocId = documentReference.getId();
+                mUpdateUser(documentReference.getId());
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -188,5 +221,49 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
+    }
+
+    private void mUpdateUser(final String gDocId) {
+        collRefUsers.document(adminUid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful())
+                {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    CRUD_firebase.mUpdateArray(
+                            collRefUsers,
+                            documentSnapshot.getId(),
+                            Constants.my_groups,
+                            gDocId);
+                }
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("TAG", "onFailure: " + e.toString());
+
+            }
+        });
+
+/*
+        collRefUsers.document(adminUid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
+                        if (documentSnapshot.get(Constants.userId).toString().equals(adminUid)) {
+
+                        }
+                    }
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+*/
+
     }
 }

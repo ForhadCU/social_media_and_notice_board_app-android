@@ -36,7 +36,7 @@ public class AdapterGroupMembers extends RecyclerView.Adapter<AdapterGroupMember
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         GroupMember current = userArrayList.get(position);
 
-        holder.textViewUserName.setText(current.getuName());
+        holder.textViewUserName.setText(current.getUsername());
 
     }
 
@@ -67,7 +67,7 @@ public class AdapterGroupMembers extends RecyclerView.Adapter<AdapterGroupMember
             switch (view.getId()) {
                 case R.id.tvBtnRemoveMembers:
 //                    removeMember();
-                    iCallbackRemoveMember.removeMember(current.getuId(), current.getgId());
+                    iCallbackRemoveMember.removeMember(current.getUserId(), current.getgId());
                     textViewBtnRemove.setVisibility(View.GONE);
                     textViewBtnRemoveSuccess.setVisibility(View.VISIBLE);
                     break;

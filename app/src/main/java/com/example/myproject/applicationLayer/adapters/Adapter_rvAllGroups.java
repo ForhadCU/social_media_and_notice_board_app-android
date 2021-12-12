@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myproject.applicationLayer.strategyDesignPattern.GroupActivity;
+import com.example.myproject.presentationLayer.GroupActivity;
 import com.example.myproject.R;
 import com.example.myproject.applicationLayer.interfaces.ICallbackRemoveGroups;
 import com.example.myproject.databaseLayer.models.Groups;
@@ -66,14 +66,15 @@ public class Adapter_rvAllGroups extends RecyclerView.Adapter<Adapter_rvAllGroup
             if (view.getId() == R.id.tvBtnRemoveGroup)
             {
                 remove();
-                iCallbackRemoveGroups.removeGroup(current.getgId());
+                iCallbackRemoveGroups.removeGroup(current.getgDocId());
             }
             else {
-                String gId = textViewGroupID.getText().toString();
+                String gDocId = current.getgDocId();
+//                String gId = textViewGroupID.getText().toString();
                 String gName = textViewGroupName.getText().toString();
 
                 Intent intentGroupActivity = new Intent(contextThis, GroupActivity.class);
-                intentGroupActivity.putExtra("gId", gId);
+                intentGroupActivity.putExtra("gDocId", gDocId);
                 intentGroupActivity.putExtra("gName", gName);
                 contextThis.startActivity(intentGroupActivity);
             }

@@ -13,9 +13,9 @@ public class IntentNoticesClass implements IStrategy {
     }
 
     @Override
-    public void mIntentData(String gId, String gName) {
+    public void mIntentData(String gDocId, String gName) {
         Intent intent = new Intent(context, NoticesActivity.class);
-        intent.putExtra("gId", gId);
+        intent.putExtra("gDocId", gDocId);
         intent.putExtra("gName", gName);
 
         context.startActivity(intent);

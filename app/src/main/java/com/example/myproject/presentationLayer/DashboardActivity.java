@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myproject.R;
 import com.example.myproject.applicationLayer.adapters.MyAdapter_rvAllpost;
+import com.example.myproject.databaseLayer.models.Constants;
 import com.example.myproject.databaseLayer.models.Data_Handler;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,17 +42,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthstatelistener;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    private CollectionReference collectionReferenceNotices = firebaseFirestore.collection("Notifly_Post_Collection");
-    private CollectionReference collectionReferenceUser = firebaseFirestore.collection("Users");
-    private Data_Handler data_handler;
+    private CollectionReference collRefNotices = firebaseFirestore.collection(Constants.coll_notices);
+    private CollectionReference collRefUser = firebaseFirestore.collection(Constants.coll_users);
     private ArrayList<Data_Handler> dataHandlerList;
     private MyAdapter_rvAllpost myAdapter_rvAllpost;
     private RecyclerView recyclerView;
     private TextView navUserName, navUserEmail;
-    private CollectionReference collectionReference = firebaseFirestore.collection("Notifly_Post_Collection");
-
 
     private String gId;
 
@@ -60,57 +58,17 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        mAuth = FirebaseAuth.getInstance();
-        gId = mAuth.getCurrentUser().getUid();
-        //set toolbar
-        toolbar = findViewById(R.id.toolbarId);
-        setSupportActionBar(toolbar);
-        this.setTitle("Dashboard");
-        if (Build.VERSION.SDK_INT >= 21)
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        mBind();
+        mInit();
+        mSetToolbar();
+        mSetRv();
+        mSetDrawer();
+        mCheckCurrentUser();
+        mGetUserNameEmail();
+        mNotification();
+    }
 
-        drawerLayout = findViewById(R.id.drawerLayoutId);
-        navigationView = findViewById(R.id.navViewId);
-        recyclerView = findViewById(R.id.rv_allPostID);
-
-        View headerView = navigationView.getHeaderView(0);
-        navUserName = headerView.findViewById(R.id.navUserNameId);
-        navUserEmail = headerView.findViewById(R.id.navEmailId);
-//        navUser.setText("Change User Name");
-
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
-                this,
-                drawerLayout,
-                toolbar,
-                R.string.nav_open,
-                R.string.nav_close
-        );
-
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
-        //End set toolbar
-
-        //start Auth
-        mAuthstatelistener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                //check user sign in
-                if (mAuth.getCurrentUser() == null) {
-                    Intent signINintent = new Intent(DashboardActivity.this, LoginActivity.class);
-                    signINintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(signINintent);
-                } else
-                    mShowAllPosts();
-            }
-        };
-
-        getUserNameEmail();
-
-
+    private void mNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
             String channelId = getString(R.string.default_notification_channel_id);
@@ -126,11 +84,68 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 Log.d("Dashboard", "Key: " + key + " Value: " + value);
             }
         }
+    }
+
+    private void mCheckCurrentUser() {
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                //check user sign in
+                if (mAuth.getCurrentUser() == null) {
+                    Intent signInIntent = new Intent(DashboardActivity.this, LoginActivity.class);
+                    signInIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(signInIntent);
+                } else
+                    mShowAllPosts();
+            }
+        };
 
     }
 
-    private void getUserNameEmail() {
-        collectionReferenceUser.addSnapshotListener(new EventListener<QuerySnapshot>() {
+    private void mSetDrawer() {
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                toolbar,
+                R.string.nav_open,
+                R.string.nav_close
+        );
+
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void mSetRv() {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void mInit() {
+        mAuth = FirebaseAuth.getInstance();
+        gId = mAuth.getCurrentUser().getUid();
+    }
+
+    private void mSetToolbar() {
+        toolbar = findViewById(R.id.toolbarId);
+        setSupportActionBar(toolbar);
+        this.setTitle("Dashboard");
+        if (Build.VERSION.SDK_INT >= 21)
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+    }
+
+    private void mBind() {
+        drawerLayout = findViewById(R.id.drawerLayoutId);
+        navigationView = findViewById(R.id.navViewId);
+        recyclerView = findViewById(R.id.rv_allPostID);
+
+        View headerView = navigationView.getHeaderView(0);
+        navUserName = headerView.findViewById(R.id.navUserNameId);
+        navUserEmail = headerView.findViewById(R.id.navEmailId);
+    }
+
+    private void mGetUserNameEmail() {
+        collRefUser.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 for (QueryDocumentSnapshot queryDocumentSnapshot : value) {
@@ -170,7 +185,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthstatelistener);
+        mAuth.addAuthStateListener(mAuthStateListener);
     }
 
     /*
@@ -224,7 +239,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         }); *///it's also work
 
         //very Real Time
-        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        collRefNotices.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 //                dataHandlerList = new ArrayList<>();

@@ -15,40 +15,41 @@
         android:layout_height="wrap_content"
 
         >
+
         <RelativeLayout
+            android:id="@+id/l1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:id="@+id/l1"
-            >
+            android:padding="5dp">
+
             <LinearLayout
+                android:id="@+id/l2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/l2"
                 android:layout_alignParentTop="true"
-                >
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Group: "
-                    />
+                    android:text="Group: " />
+
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Group Name"
                     android:id="@+id/tv_rv_noticeList_groupName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    />
+                    android:text="Group Name" />
             </LinearLayout>
+
             <TextView
                 android:id="@+id/titleID"
+                style="@style/Post_title_txt_sty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Post_title_txt_sty"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
                 android:layout_below="@+id/l2"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:text="Title" />
 
             <TextView
@@ -56,19 +57,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/titleID"
-                android:layout_marginBottom="16dp"
                 android:layout_marginStart="5dp"
-                android:textAppearance="@style/Widget.AppCompat.TextView"
+                android:text="This is desc."
+             />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_below="@+id/descID"
+                android:layout_marginTop="10dp"
+                android:background="@color/light_gray"
+                android:id="@+id/view2"
                 />
+
+
             <ImageView
-                android:layout_below="@id/descID"
+                android:layout_marginTop="10dp"
+                android:id="@+id/imgViewID"
                 android:layout_width="320dp"
                 android:layout_height="420dp"
-                android:id="@+id/imgViewID"
-                android:src="@mipmap/ic_launcher"
-                android:scaleType="fitXY"
+                android:layout_below="@id/view2"
                 android:layout_centerHorizontal="true"
-                />
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_launcher" />
         </RelativeLayout>
         <View
             android:layout_width="match_parent"

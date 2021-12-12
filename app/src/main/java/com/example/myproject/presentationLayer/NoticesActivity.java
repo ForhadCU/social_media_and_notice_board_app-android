@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myproject.R;
 import com.example.myproject.applicationLayer.adapters.MyAdapter_rvAllpost;
+import com.example.myproject.databaseLayer.models.Constants;
 import com.example.myproject.databaseLayer.models.Data_Handler;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -23,11 +24,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class NoticesActivity extends AppCompatActivity {
-    private String gId, gName;
+    private String gDocId, gName;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthstatelistener;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    private CollectionReference collectionReference = firebaseFirestore.collection("Notifly_Post_Collection");
+
+    private CollectionReference collRefNotices = firebaseFirestore.collection(Constants.coll_notices);
     private Data_Handler data_handler;
     private ArrayList<Data_Handler> dataHandlerList;
     private MyAdapter_rvAllpost myAdapter_rvAllpost;
@@ -44,7 +46,7 @@ public class NoticesActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarId);
         setSupportActionBar(toolbar);
         Intent intentFromManageGroupActivity = getIntent();
-        gId = intentFromManageGroupActivity.getStringExtra("gId");
+        gDocId = intentFromManageGroupActivity.getStringExtra("gDocId");
         gName = intentFromManageGroupActivity.getStringExtra("gName");
         this.setTitle("Notices");
 
@@ -85,14 +87,13 @@ public class NoticesActivity extends AppCompatActivity {
         }); *///it's also work
 
         //very Real Time
-        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        collRefNotices.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 //                dataHandlerList = new ArrayList<>();
 
                 for (QueryDocumentSnapshot documentSnapshot : value) {
-                    if (documentSnapshot.get("currentUid").equals(mAuth.getCurrentUser().getUid()) &&
-                            documentSnapshot.get("gId").equals(gId)) {
+                    if (documentSnapshot.get("gDocId").equals(gDocId)) {
                         Data_Handler data_handler = documentSnapshot.toObject(Data_Handler.class);
                         dataHandlerList.add(data_handler);
                         myAdapter_rvAllpost = new MyAdapter_rvAllpost(dataHandlerList, getApplicationContext());

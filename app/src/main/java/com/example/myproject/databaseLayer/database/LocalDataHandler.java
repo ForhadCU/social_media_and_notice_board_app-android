@@ -27,6 +27,7 @@ public class LocalDataHandler extends SQLiteOpenHelper {
     private static final String dGroupID = "groupID";
     private static final String dGroupName = "group_name";
     private static final String dGroupDesc = "group_desc";
+    private static final String dGroupDocId = "group_docId";
     private static final String dID2 = "_id";
     private static final String dGroupID2 = "groupID";
     private static final String dGroupName2 = "group_name";
@@ -110,8 +111,9 @@ public class LocalDataHandler extends SQLiteOpenHelper {
                 String groupID = cursor.getString(cursor.getColumnIndex(dGroupID));
                 String groupName = cursor.getString(cursor.getColumnIndex(dGroupName));
                 String groupDesc = cursor.getString(cursor.getColumnIndex(dGroupDesc));
+                String groupDocId = cursor.getString(cursor.getColumnIndex(dGroupDocId));
 
-                storeData.add(new Groups(groupID, groupName, groupDesc));
+                storeData.add(new Groups(groupID, groupName, groupDesc, groupDocId));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -128,11 +130,12 @@ public class LocalDataHandler extends SQLiteOpenHelper {
                 String groupID = cursor.getString(cursor.getColumnIndex(dGroupID));
                 String groupName = cursor.getString(cursor.getColumnIndex(dGroupName));
                 String groupDesc = cursor.getString(cursor.getColumnIndex(dGroupDesc));
+                String groupDocId = cursor.getString(cursor.getColumnIndex(dGroupDocId));
 
 //                storeData.add(groupID);
 //                storeData.add(groupName);
 //                storeData.add(groupDesc);
-                storeData.add(new Groups(groupID, groupName, groupDesc));
+                storeData.add(new Groups(groupID, groupName, groupDesc, groupDocId));
             } while (cursor.moveToNext());
         }
         cursor.close();

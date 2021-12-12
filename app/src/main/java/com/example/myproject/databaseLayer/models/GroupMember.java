@@ -3,18 +3,13 @@ package com.example.myproject.databaseLayer.models;
 public class GroupMember {
     String gId;
     String gName;
-    String uId;
-    String uName;
+    String userId;
+    String username;
 
     public GroupMember() {
     }
 
-    public GroupMember(String gId, String gName, String uId, String uName) {
-        this.gId = gId;
-        this.gName = gName;
-        this.uId = uId;
-        this.uName = uName;
-    }
+
 
     public String getgId() {
         return gId;
@@ -32,19 +27,19 @@ public class GroupMember {
         this.gName = gName;
     }
 
-    public String getuId() {
-        return uId;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setuId(String uId) {
-        this.uId = uId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getuName() {
-        return uName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setuName(String uName) {
-        this.uName = uName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

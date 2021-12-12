@@ -25,18 +25,19 @@
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:layout_marginLeft="5dp"
         />
+
     <EditText
+        android:id="@+id/edtTxt_groupName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/edtTxt_groupName"
         android:layout_below="@id/tv1"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="16dp"
         android:background="@drawable/input_outline2"
         android:hint="Enter group name"
-        android:padding="5dp"
         android:maxLines="1"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="10dp"
+        android:padding="5dp"
         android:textSize="15sp"
 
         />
@@ -104,16 +105,18 @@
         />
 
     <Button
+        android:id="@+id/btn_createGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_createGroup"
         android:layout_below="@+id/spinner_groupSec"
-        android:layout_margin="70dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginBottom="70dp"
+        android:backgroundTint="#4CAF50"
         android:text="Create / Save"
         android:textAllCaps="false"
-        android:backgroundTint="#4CAF50"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        />
+        android:textAppearance="@style/TextAppearance.AppCompat" />
 
 
 </RelativeLayout>

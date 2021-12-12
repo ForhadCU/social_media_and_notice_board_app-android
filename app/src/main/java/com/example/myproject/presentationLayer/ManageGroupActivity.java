@@ -16,11 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myproject.R;
 import com.example.myproject.applicationLayer.adapters.Adapter_rvAllGroups;
-import com.example.myproject.databaseLayer.database.LocalDataHandler;
 import com.example.myproject.applicationLayer.interfaces.ICallbackRemoveGroups;
+import com.example.myproject.databaseLayer.database.LocalDataHandler;
+import com.example.myproject.databaseLayer.models.Constants;
 import com.example.myproject.databaseLayer.models.Groups;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -29,8 +30,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ManageGroupActivity extends AppCompatActivity implements View.OnClickListener, ICallbackRemoveGroups {
+    private static final String TAG = "Read";
     private Toolbar toolbar;
     private Button buttonCreateGroup;
     private LocalDataHandler localDataHandler;
@@ -38,16 +41,17 @@ public class ManageGroupActivity extends AppCompatActivity implements View.OnCli
     private RecyclerView recyclerView;
     private Adapter_rvAllGroups adapter_rvAllGroups;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private String uId = mAuth.getCurrentUser().getUid();
-    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    private CollectionReference collectionReferenceMyGroups = firebaseFirestore.collection("MY_GROUPS");
+    private String adminUid = mAuth.getCurrentUser().getUid();
+    private static FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    private static CollectionReference collRefMyGroups = firebaseFirestore.collection(Constants.coll_groups);
+    private static CollectionReference collRefUsers = firebaseFirestore.collection(Constants.coll_users);
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_group);
-
+        this.setTitle("Manage Group");
         toolbar = findViewById(R.id.toolbarId);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -95,6 +99,7 @@ public class ManageGroupActivity extends AppCompatActivity implements View.OnCli
         switch (view.getId()) {
             case R.id.btn_createGroupIntent:
                 startActivity(new Intent(ManageGroupActivity.this, CreateGroupActivity.class));
+
         }
     }
 
@@ -120,26 +125,29 @@ public class ManageGroupActivity extends AppCompatActivity implements View.OnCli
             }
         });
 */
-        collectionReferenceMyGroups.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        collRefMyGroups.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful())
-                {
-                    for (DocumentSnapshot documentSnapshot : task.getResult())
-                    {
-                        if (documentSnapshot != null && documentSnapshot.exists()) {
-                            if (documentSnapshot.get("uId").equals(uId)) {
-                                Groups groupsData = documentSnapshot.toObject(Groups.class);
-                                groupsArrayList.add(groupsData);
+                ArrayList<String> gMembers = new ArrayList<>();
 
-                                adapter_rvAllGroups.notifyDataSetChanged();
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+                            if (Objects.equals(documentSnapshot.get(Constants.adminUid), adminUid)) {
+//                                gMembers = (ArrayList<String>) documentSnapshot.get(Constants.gMembers);
+                                Groups groupsData = documentSnapshot.toObject(Groups.class);
+                                Objects.requireNonNull(groupsData).setgDocId(documentSnapshot.getId());
+                                groupsArrayList.add(groupsData);
                             }
 
                         } else
                             Log.d("Test", "onEvent: queryDocumentSnapshot is null");
-                    }
+
+                        adapter_rvAllGroups.notifyDataSetChanged();
+
                     }
                 }
+            }
         });
     }
 
@@ -154,17 +162,15 @@ public class ManageGroupActivity extends AppCompatActivity implements View.OnCli
 
 
     @Override
-    public void removeGroup(final String gId) {
-        collectionReferenceMyGroups.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    public void removeGroup(final String gDocId) {
+/*
+        collRefMyGroups.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful())
-                {
-                    for (DocumentSnapshot documentSnapshot : task.getResult())
-                    {
-                        if (documentSnapshot.get("gId").toString().equals(gId))
-                        {
-                            collectionReferenceMyGroups.document(documentSnapshot.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                        if (documentSnapshot.get("gId").toString().equals(gId)) {
+                            collRefMyGroups.document(documentSnapshot.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(ManageGroupActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
@@ -175,5 +181,20 @@ public class ManageGroupActivity extends AppCompatActivity implements View.OnCli
                 }
             }
         });
+*/
+
+        collRefMyGroups.document(gDocId).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(getApplicationContext(), "Deleted", Toast.LENGTH_SHORT).show();
+//                collRefUsers.
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("TAG", "onFailure: delete group" + e.toString());
+            }
+        });
     }
+
 }
