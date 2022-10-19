@@ -4,13 +4,17 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.11354166666666667" />
+        <entry key="app/src/main/res/drawable-anydpi/ic_thumb.xml" value="0.1945" />
         <entry key="app/src/main/res/layout/activity_create_group.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/layout/activity_group.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/layout/activity_launcher.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_notices.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/rv_all_users_layout.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/layout/rv_allpost_custm_lay.xml" value="0.20729166666666668" />
+        <entry key="app/src/main/res/layout/rv_group_list_layout.xml" value="0.20729166666666668" />
+        <entry key="app/src/main/res/layout/rv_group_members.xml" value="0.20729166666666668" />
       </map>
     </option>
   </component>
